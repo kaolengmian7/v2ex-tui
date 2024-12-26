@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"net/http"
+
 	"v2ex-tui/internal/crawler"
 	"v2ex-tui/internal/model"
 
@@ -22,7 +24,7 @@ type HomePage struct {
 	height   int
 }
 
-func NewHomePage() *HomePage {
+func NewHomePage(client *http.Client) *HomePage {
 	s := spinner.New()
 	s.Spinner = spinner.Dot
 	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
@@ -57,7 +59,7 @@ func NewHomePage() *HomePage {
 		table:    t,
 		loading:  true,
 		spinner:  s,
-		crawler:  crawler.New(),
+		crawler:  crawler.New(client),
 		selected: 0,
 		width:    0,
 		height:   0,

@@ -1,11 +1,20 @@
 package main
 
 import (
+	"crypto/tls"
+	"flag"
 	"fmt"
+	"net/http"
+	"net/url"
 
 	"v2ex-tui/internal/ui"
 
 	tea "github.com/charmbracelet/bubbletea"
+)
+
+var (
+	socks5Addr string
+	client     *http.Client
 )
 
 type page int
@@ -25,8 +34,8 @@ type model struct {
 func initialModel() model {
 	return model{
 		currentPage: homeView,
-		homePage:    ui.NewHomePage(),
-		detailPage:  ui.NewDetailPage(),
+		homePage:    ui.NewHomePage(client),
+		detailPage:  ui.NewDetailPage(client),
 	}
 }
 
@@ -95,6 +104,30 @@ func (m model) View() string {
 }
 
 func main() {
+	flag.StringVar(&socks5Addr, "proxy", "", "use socks5 proxy")
+	flag.Parse()
+	if socks5Addr != "" {
+		proxyFun := func(_ *http.Request) (*url.URL, error) {
+			return url.Parse(socks5Addr)
+		}
+		transport := &http.Transport{
+			Proxy: proxyFun,
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		}
+		client = &http.Client{
+			Transport: transport,
+		}
+	} else {
+		client = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: true,
+				},
+			},
+		}
+	}
 	p := tea.NewProgram(initialModel(), tea.WithAltScreen(), tea.WithMouseAllMotion())
 	if _, err := p.Run(); err != nil {
 		fmt.Println("Error running program:", err)
