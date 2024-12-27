@@ -90,6 +90,14 @@ func (h *HomePage) Update(msg tea.Msg) (*HomePage, tea.Cmd) {
 			h.table, _ = h.table.Update(msg)
 			h.selected = h.table.Cursor()
 			return h, nil
+		case "j":
+			h.table, _ = h.table.Update(tea.KeyMsg{Type: tea.KeyDown})
+			h.selected = h.table.Cursor()
+			return h, nil
+		case "k":
+			h.table, _ = h.table.Update(tea.KeyMsg{Type: tea.KeyUp})
+			h.selected = h.table.Cursor()
+			return h, nil
 		case "enter":
 			if !h.loading && h.selected < len(h.topics) {
 				return h, nil // 将在主程序中处理页面切换
