@@ -3,20 +3,34 @@ package crawler
 import (
 	"net/http"
 	"strings"
+	"v2ex-tui/internal/config"
 
 	"v2ex-tui/internal/model"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
-type Crawler struct{}
+type Crawler struct {
+	client *http.Client
+}
 
 func New() *Crawler {
-	return &Crawler{}
+	proxyConfig, err := config.LoadConfig()
+	var proxyAddr string
+	if err == nil {
+		proxyAddr = proxyConfig.Proxy.Socks5
+	}
+	client, err := createHttpClient(proxyAddr)
+	if err != nil {
+		return nil
+	}
+	return &Crawler{
+		client: client,
+	}
 }
 
 func (c *Crawler) FetchTopics() ([]model.Topic, error) {
-	resp, err := http.Get("https://www.v2ex.com/?tab=all")
+	resp, err := c.client.Get("https://www.v2ex.com/?tab=all")
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +71,7 @@ func (c *Crawler) FetchTopics() ([]model.Topic, error) {
 }
 
 func (c *Crawler) FetchTopicDetail(url string) (*model.Topic, error) {
-	resp, err := http.Get(url)
+	resp, err := c.client.Get(url)
 	if err != nil {
 		return nil, err
 	}
