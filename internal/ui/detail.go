@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 
@@ -32,7 +33,7 @@ type DetailPage struct {
 	viewport viewport.Model
 }
 
-func NewDetailPage() *DetailPage {
+func NewDetailPage(client *http.Client) *DetailPage {
 	s := spinner.New()
 	s.Spinner = spinner.Dot
 	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
@@ -48,7 +49,7 @@ func NewDetailPage() *DetailPage {
 	return &DetailPage{
 		loading:  true,
 		spinner:  s,
-		crawler:  crawler.New(),
+		crawler:  crawler.New(client),
 		selected: 0,
 		viewport: vp,
 	}
