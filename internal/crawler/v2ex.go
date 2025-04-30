@@ -4,19 +4,50 @@ import (
 	"net/http"
 	"strings"
 
-	"v2ex-tui/internal/model"
-
 	"github.com/PuerkitoBio/goquery"
+
+	"v2ex-tui/internal/model"
 )
 
-type Crawler struct{}
+type Crawler struct {
+	httpClient *http.Client
+	Proxy      string
+}
 
-func New() *Crawler {
-	return &Crawler{}
+// define option type
+type Option func(*Crawler)
+
+// Support crawler options func, eg: set proxy
+func WithProxy(proxy string) Option {
+	opt, err := SetProxy(proxy)
+	if err != nil {
+		panic(err)
+	}
+
+	return func(c *Crawler) {
+		c.Proxy = proxy
+		c.httpClient = NewHttpClient(opt)
+	}
+}
+
+func WithHttpClient(client *http.Client) Option {
+	return func(c *Crawler) {
+		c.httpClient = client
+	}
+}
+
+func New(opts ...Option) *Crawler {
+	c := &Crawler{
+		httpClient: &http.Client{},
+	}
+	for _, opt := range opts {
+		opt(c)
+	}
+	return c
 }
 
 func (c *Crawler) FetchTopics() ([]model.Topic, error) {
-	resp, err := http.Get("https://www.v2ex.com/?tab=all")
+	resp, err := c.httpClient.Get("https://www.v2ex.com/?tab=all")
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +88,7 @@ func (c *Crawler) FetchTopics() ([]model.Topic, error) {
 }
 
 func (c *Crawler) FetchTopicDetail(url string) (*model.Topic, error) {
-	resp, err := http.Get(url)
+	resp, err := c.httpClient.Get(url)
 	if err != nil {
 		return nil, err
 	}

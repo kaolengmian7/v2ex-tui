@@ -1,14 +1,18 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
-	"v2ex-tui/internal/ui"
-
 	tea "github.com/charmbracelet/bubbletea"
+
+	"v2ex-tui/internal/crawler"
+	"v2ex-tui/internal/ui"
 )
 
 type page int
+
+var proxyURL string
 
 const (
 	homeView page = iota
@@ -23,10 +27,18 @@ type model struct {
 }
 
 func initialModel() model {
+	var client *crawler.Crawler
+	if proxyURL != "" {
+		client = crawler.New(
+			crawler.WithProxy(proxyURL),
+		)
+	} else {
+		client = crawler.New()
+	}
 	return model{
 		currentPage: homeView,
-		homePage:    ui.NewHomePage(),
-		detailPage:  ui.NewDetailPage(),
+		homePage:    ui.NewHomePage(client),
+		detailPage:  ui.NewDetailPage(client),
 	}
 }
 
@@ -95,6 +107,8 @@ func (m model) View() string {
 }
 
 func main() {
+	flag.StringVar(&proxyURL, "proxy", "", "Proxy URL (e.g., http://localhost:8080 or socks5://localhost:1080)")
+	flag.Parse()
 	p := tea.NewProgram(initialModel(), tea.WithAltScreen(), tea.WithMouseAllMotion())
 	if _, err := p.Run(); err != nil {
 		fmt.Println("Error running program:", err)

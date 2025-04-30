@@ -17,6 +17,7 @@
 
 - **隐蔽**: 在终端里浏览 V2EX，老板以为你在写代码呢！🤫
 - **支持鼠标操作**: 在命令行就只能用键盘了吗？没有鼠标怎么刷的爽？🖱️
+-  **支持设置代理**: 支持协议 `http` `https` `socks5` 🪜
 
 ## 🚀 使用教程
 
@@ -26,6 +27,7 @@
 2. `cd path/to/v2ex-tui/bin`
 3. 运行 `./mac_v2ex_tui`
 4. 如果你有 golang 环境，也可以找到 main 文件运行 `go run main.go`
+5. 支持proxy, `go run cmd/v2ex/main.go --proxy socks5://127.0.0.1:7891` 或者使用编译产物 `./bin/linux_v2ex_tui --proxy socks5://127.0.0.1:7891`
 
 ### 命令介绍
 

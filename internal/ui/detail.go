@@ -5,15 +5,15 @@ import (
 	"os"
 	"strings"
 
-	"v2ex-tui/internal/crawler"
-	"v2ex-tui/internal/model"
-
 	"github.com/atotto/clipboard"
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"golang.org/x/term"
+
+	"v2ex-tui/internal/crawler"
+	"v2ex-tui/internal/model"
 )
 
 const (
@@ -32,7 +32,7 @@ type DetailPage struct {
 	viewport viewport.Model
 }
 
-func NewDetailPage() *DetailPage {
+func NewDetailPage(c *crawler.Crawler) *DetailPage {
 	s := spinner.New()
 	s.Spinner = spinner.Dot
 	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
@@ -48,7 +48,7 @@ func NewDetailPage() *DetailPage {
 	return &DetailPage{
 		loading:  true,
 		spinner:  s,
-		crawler:  crawler.New(),
+		crawler:  c,
 		selected: 0,
 		viewport: vp,
 	}

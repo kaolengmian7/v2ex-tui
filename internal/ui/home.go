@@ -1,13 +1,13 @@
 package ui
 
 import (
-	"v2ex-tui/internal/crawler"
-	"v2ex-tui/internal/model"
-
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+
+	"v2ex-tui/internal/crawler"
+	"v2ex-tui/internal/model"
 )
 
 type HomePage struct {
@@ -22,7 +22,7 @@ type HomePage struct {
 	height   int
 }
 
-func NewHomePage() *HomePage {
+func NewHomePage(c *crawler.Crawler) *HomePage {
 	s := spinner.New()
 	s.Spinner = spinner.Dot
 	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
@@ -57,7 +57,7 @@ func NewHomePage() *HomePage {
 		table:    t,
 		loading:  true,
 		spinner:  s,
-		crawler:  crawler.New(),
+		crawler:  c,
 		selected: 0,
 		width:    0,
 		height:   0,
