@@ -1,8 +1,8 @@
 package ui
 
 import (
-	"v2ex-tui/internal/crawler"
-	"v2ex-tui/internal/model"
+	"github.com/kaolengmian7/v2ex-tui/internal/crawler"
+	"github.com/kaolengmian7/v2ex-tui/internal/model"
 
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/table"
@@ -105,12 +105,14 @@ func (h *HomePage) Update(msg tea.Msg) (*HomePage, tea.Cmd) {
 
 		var rows []table.Row
 		for _, t := range h.topics {
-			rows = append(rows, table.Row{
-				t.Title,
-				t.Author,
-				t.Comments,
-				t.Time,
-			})
+			rows = append(
+				rows, table.Row{
+					t.Title,
+					t.Author,
+					t.Comments,
+					t.Time,
+				},
+			)
 		}
 		h.table.SetRows(rows)
 		return h, nil

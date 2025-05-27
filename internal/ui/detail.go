@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"v2ex-tui/internal/crawler"
-	"v2ex-tui/internal/model"
+	"github.com/kaolengmian7/v2ex-tui/internal/crawler"
+	"github.com/kaolengmian7/v2ex-tui/internal/model"
 
 	"github.com/atotto/clipboard"
 	"github.com/charmbracelet/bubbles/spinner"
@@ -157,7 +157,8 @@ func (d *DetailPage) View() string {
 	content.WriteString(
 		titleStyle.Render(IconTitle+"话题: "+d.Topic.Title) + "\n" +
 			subtitleStyle.Render(IconAuthor+"楼主: "+d.Topic.Author) + "\n" +
-			subtitleStyle.Render(IconTime+"活跃时间: "+d.Topic.Time) + "\n")
+			subtitleStyle.Render(IconTime+"活跃时间: "+d.Topic.Time) + "\n",
+	)
 
 	// 内容区域
 	content.WriteString(
@@ -171,11 +172,16 @@ func (d *DetailPage) View() string {
 	// 格式化展示每条评论
 	if len(d.Topic.Replies) > 0 {
 		for _, reply := range d.Topic.Replies {
-			content.WriteString(subtitleStyle.Render(fmt.Sprintf("%s%s 于 %s 回复:",
-				IconAuthor,
-				reply.Author,
-				reply.Time,
-			)) + "\n")
+			content.WriteString(
+				subtitleStyle.Render(
+					fmt.Sprintf(
+						"%s%s 于 %s 回复:",
+						IconAuthor,
+						reply.Author,
+						reply.Time,
+					),
+				) + "\n",
+			)
 
 			wrappedContent := d.wrapText(reply.Content)
 			content.WriteString(contentStyle.Render(wrappedContent) + "\n")

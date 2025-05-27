@@ -1,4 +1,4 @@
-module v2ex-tui
+module github.com/kaolengmian7/v2ex-tui
 
 go 1.20
 

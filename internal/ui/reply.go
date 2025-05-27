@@ -3,7 +3,7 @@ package ui
 import (
 	"strings"
 
-	"v2ex-tui/internal/model"
+	"github.com/kaolengmian7/v2ex-tui/internal/model"
 
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
@@ -63,12 +63,14 @@ func (r *ReplyPage) LoadReply(reply model.Reply, allReplies []model.Reply) {
 	// 更新表格数据
 	var rows []table.Row
 	for _, rep := range r.replies {
-		rows = append(rows, table.Row{
-			rep.Number,
-			rep.Author,
-			rep.Content,
-			rep.Time,
-		})
+		rows = append(
+			rows, table.Row{
+				rep.Number,
+				rep.Author,
+				rep.Content,
+				rep.Time,
+			},
+		)
 	}
 	r.table.SetRows(rows)
 }
@@ -89,12 +91,14 @@ func (r *ReplyPage) View() string {
 	var s strings.Builder
 
 	// 原评论区域
-	s.WriteString(sectionStyle.Render(
-		titleStyle.Render(IconContent+" 原评论 (#"+r.mainReply.Number+")")+"\n"+
-			subtitleStyle.Render(IconAuthor+" 作者: "+r.mainReply.Author)+"\n"+
-			subtitleStyle.Render(IconTime+" 时间: "+r.mainReply.Time)+"\n"+
-			contentStyle.Render(r.mainReply.Content),
-	) + "\n")
+	s.WriteString(
+		sectionStyle.Render(
+			titleStyle.Render(IconContent+" 原评论 (#"+r.mainReply.Number+")")+"\n"+
+				subtitleStyle.Render(IconAuthor+" 作者: "+r.mainReply.Author)+"\n"+
+				subtitleStyle.Render(IconTime+" 时间: "+r.mainReply.Time)+"\n"+
+				contentStyle.Render(r.mainReply.Content),
+		) + "\n",
+	)
 
 	// 回复列表区域
 	if len(r.replies) > 0 {

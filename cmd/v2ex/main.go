@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"v2ex-tui/internal/ui"
+	"github.com/kaolengmian7/v2ex-tui/internal/ui"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
